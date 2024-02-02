@@ -19,9 +19,9 @@ def init_arrays():
         left.append(i)
     for i in range(17, 46):
         top.append(i)
-    for i in range(46,63):
+    for i in range(46,62):
         right.append(i)
-    for i in range(63, 92):
+    for i in range(62, 91):
         bottom.append(i)
 
     return left, top, right, bottom
