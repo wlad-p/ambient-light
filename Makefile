@@ -130,44 +130,44 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named DisplayImage
+# Target rules for targets named AmbientLight
 
 # Build rule for target.
-DisplayImage: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 DisplayImage
-.PHONY : DisplayImage
+AmbientLight: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 AmbientLight
+.PHONY : AmbientLight
 
 # fast build rule for target.
-DisplayImage/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/build
-.PHONY : DisplayImage/fast
+AmbientLight/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/AmbientLight.dir/build.make CMakeFiles/AmbientLight.dir/build
+.PHONY : AmbientLight/fast
 
-DisplayImage.o: DisplayImage.cpp.o
+AmbientLight.o: AmbientLight.cpp.o
 
-.PHONY : DisplayImage.o
+.PHONY : AmbientLight.o
 
 # target to build an object file
-DisplayImage.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/DisplayImage.cpp.o
-.PHONY : DisplayImage.cpp.o
+AmbientLight.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/AmbientLight.dir/build.make CMakeFiles/AmbientLight.dir/AmbientLight.cpp.o
+.PHONY : AmbientLight.cpp.o
 
-DisplayImage.i: DisplayImage.cpp.i
+AmbientLight.i: AmbientLight.cpp.i
 
-.PHONY : DisplayImage.i
+.PHONY : AmbientLight.i
 
 # target to preprocess a source file
-DisplayImage.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/DisplayImage.cpp.i
-.PHONY : DisplayImage.cpp.i
+AmbientLight.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/AmbientLight.dir/build.make CMakeFiles/AmbientLight.dir/AmbientLight.cpp.i
+.PHONY : AmbientLight.cpp.i
 
-DisplayImage.s: DisplayImage.cpp.s
+AmbientLight.s: AmbientLight.cpp.s
 
-.PHONY : DisplayImage.s
+.PHONY : AmbientLight.s
 
 # target to generate assembly for a file
-DisplayImage.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/DisplayImage.cpp.s
-.PHONY : DisplayImage.cpp.s
+AmbientLight.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/AmbientLight.dir/build.make CMakeFiles/AmbientLight.dir/AmbientLight.cpp.s
+.PHONY : AmbientLight.cpp.s
 
 # Help Target
 help:
@@ -177,10 +177,10 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... DisplayImage"
-	@echo "... DisplayImage.o"
-	@echo "... DisplayImage.i"
-	@echo "... DisplayImage.s"
+	@echo "... AmbientLight"
+	@echo "... AmbientLight.o"
+	@echo "... AmbientLight.i"
+	@echo "... AmbientLight.s"
 .PHONY : help
 
 

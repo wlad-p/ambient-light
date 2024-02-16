@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
 #include <chrono>
+#include <thread>
 #include <cstdlib> 
 
 using namespace cv;
@@ -47,7 +48,7 @@ Vec3b dominantColor(Mat& image)
     reshapedImage.convertTo(reshapedImage, CV_32FC3);
 
     // Perform k-means clustering to find dominant colors
-    int K = 4; // number of clusters (dominant colors)
+    int K = 1; // number of clusters (dominant colors)
     Mat labels, centers;
     kmeans(reshapedImage, K, labels, TermCriteria(TermCriteria::EPS + TermCriteria::MAX_ITER, 10, 1.0), 1, KMEANS_RANDOM_CENTERS, centers);
 
@@ -156,8 +157,8 @@ void bottomBorder (Mat& image, list<unsigned int>& leds)
         
         int startRow = imageHeight - sectionSizeY;
         int endRow = imageHeight;
-        int startColumn = left + (i * sectionSizeX);
-        int endColumn = left + ((i+1) * sectionSizeX);
+        int startColumn = right - ((i+1) * sectionSizeX);
+        int endColumn = right - (i * sectionSizeX);
         Mat cropped_image = image(Range(startRow, endRow), Range(startColumn, endColumn)).clone();
         Vec3b colorBGR = dominantColor(cropped_image);
 
@@ -192,48 +193,68 @@ string buildHexString(const list<unsigned int>& list1,
     return ss.str();
 }
 
- 
+void saveFrame(const cv::Mat& frame, const std::string& folder, int frameNumber) {
+    std::stringstream filename;
+    filename << folder << "/frame_" << std::setfill('0') << std::setw(5) << frameNumber << ".jpg";
+    cv::imwrite(filename.str(), frame);
+}
+
+void intesifyColors(Mat& image)
+{
+    Mat hsvImage;
+    cvtColor(image, hsvImage, COLOR_BGR2HSV);
+
+    // Split the HSV image into individual channels
+    vector<Mat> channels;
+    split(hsvImage, channels);
+    channels[1] *= 2;
+    merge(channels, hsvImage);
+    
+    cvtColor(hsvImage, image, COLOR_HSV2BGR);
+
+}
 
 int main(int argc, char** argv )
 {
 
-    auto start_time = std::chrono::high_resolution_clock::now();
+    VideoCapture cap("/dev/video0");
 
-    if ( argc != 2 )
-    {
-        printf("usage: DisplayImage.out <Image_Path>\n");
-        return -1;
+    double fps = cap.get(cv::CAP_PROP_FPS);
+    std::cout << "Frame rate of the video stream: " << fps << std::endl;
+
+    int frameNumber = 0;
+    while(true){
+
+        cv::Mat frame;
+        cap >> frame;
+        resize(frame, frame, Size(580, 340));
+
+        
+        list<unsigned int> ledsLeft, ledsTop, ledsRight, ledsBottom;
+        initArrays(ledsLeft, ledsTop, ledsRight, ledsBottom);
+
+        if (frame.empty()) {
+            cout << "End of video stream" << std::endl;
+            break;
+        }
+
+        intesifyColors(frame);
+
+        leftBorder(frame, ledsLeft);
+        rightBorder(frame, ledsRight);
+        topBorder(frame,ledsTop);
+        bottomBorder(frame, ledsBottom);
+
+        // Pass to C script
+        string hexString = buildHexString(ledsLeft, ledsTop, ledsRight, ledsBottom);
+        string command = "sudo ./rpi_ws281x/ledtest " + hexString;
+        int result = system(command.c_str());
+
+        //std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
 
-    Mat image;
-    image = imread( argv[1], IMREAD_COLOR );
-    if ( !image.data )
-    {
-        printf("No image data \n");
-        return -1;
-    }
-    resize(image, image, Size(580, 340));
+    cap.release();
 
-    list<unsigned int> ledsLeft, ledsTop, ledsRight, ledsBottom;
-    initArrays(ledsLeft, ledsTop, ledsRight, ledsBottom);
-
-    leftBorder(image, ledsLeft);
-    rightBorder(image, ledsRight);
-    topBorder(image,ledsTop);
-    bottomBorder(image, ledsBottom);
-
-    // Pass to C script
-    string hexString = buildHexString(ledsLeft, ledsTop, ledsRight, ledsBottom);
-    string command = "sudo ./rpi_ws281x/ledtest " + hexString;
-    int result = system(command.c_str());
-
-
-    auto current_time = std::chrono::high_resolution_clock::now();
-    std::cout << "Program has been running for " << std::chrono::duration_cast<std::chrono::milliseconds>(current_time - start_time).count() << "mili seconds" << std::endl;
-
- 
-    //namedWindow("Display Image", WINDOW_AUTOSIZE );
-    //imshow("Display Image", image);
     waitKey(0);
     return 0;
 }
