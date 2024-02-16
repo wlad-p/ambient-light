@@ -247,7 +247,7 @@ int main(int argc, char** argv )
 
         // Pass to C script
         string hexString = buildHexString(ledsLeft, ledsTop, ledsRight, ledsBottom);
-        string command = "sudo ./rpi_ws281x/ledtest " + hexString;
+        string command = "sudo ./ledtest " + hexString;
         int result = system(command.c_str());
 
         //std::this_thread::sleep_for(std::chrono::milliseconds(500));

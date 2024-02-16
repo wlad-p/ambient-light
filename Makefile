@@ -102,6 +102,9 @@ all: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/darts/ambient-light/CMakeFiles /home/darts/ambient-light//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/darts/ambient-light/CMakeFiles 0
+
+	#LED Handler
+	gcc LedHandler.c -o LedHandler rpi_ws281x/ws2811.c rpi_ws281x/mailbox.c rpi_ws281x/pwm.c rpi_ws281x/pcm.c rpi_ws281x/dma.c rpi_ws281x/rpihw.c -lm
 .PHONY : all
 
 # The main clean target
